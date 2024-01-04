@@ -3,3 +3,4 @@ from .models import Notebook, Images
 
 admin.site.register(Notebook)
 admin.site.register(Images)
+
