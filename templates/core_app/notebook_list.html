@@ -8,33 +8,60 @@
 
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
 
-            {% if notebooks %}
-                {% for notebook in notebooks %}
+                {% if page_obj %}
+{#                    {% for i in data %}#}
+{#                        <h6>{{ i.images }}</h6>#}
+{#                    {% endfor %}#}
+                    {% for notebook in page_obj %}
 
-                    <div class="col">
-                        <div class="card shadow-sm">
-                            <img src="{{ notebook.image.first }}" height="250">
-                            <div class="card-body">
-                                <p class="card-text">This is a wider card with supporting text below as a natural
-                                    lead-in to additional content. This content is a little bit longer.</p>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div class="btn-group">
-                                        <a type="button" class="btn btn-sm btn-outline-primary">View</a>
-                                        <button type="button" class="btn btn-sm btn-outline-success">Edit</button>
+                        <div class="col">
+                            <div class="card shadow-sm">
+                                {% for img in notebook.image.all|slice:":1" %}
+                                <img src="{{ img.image }}" height="250" alt="none">
+                                    {% endfor %}
+
+                                <div class="card-body">
+                                    <p class="card-text">{{ notebook.title | truncatewords:5 }}</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="btn-group">
+                                            <a href="{% url 'notebook_detail' notebook.id %}" type="button"
+                                               class="btn btn-sm btn-outline-primary">ТЫК</a>
+
+                                        </div>
+                                        <p class="text-body-secondary"
+                                           style="font-family: Arial; font-size: 25px">{{ notebook.price }} BYN</p>
                                     </div>
-                                    <p class="text-body-secondary" style="font-family: Arial; font-size: 25px">{{ notebook.price }} BYN</p>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    
-                {% endfor %}
-            {% else %}
-            <h2>Нет записей</h2>
-            {% endif %}
+
+                    {% endfor %}
+                {% else %}
+                    <h2>Нет записей</h2>
+                {% endif %}
+
+
+
 
             </div>
         </div>
     </div>
+     <div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+                </div>
 
 {% endblock %}
